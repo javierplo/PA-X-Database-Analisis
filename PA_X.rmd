@@ -1,0 +1,102 @@
+---
+title: "Pax Database"
+author: "Javier Plo"
+date: "Abril 2021"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+  word_document:
+    toc: yes
+    toc_depth: '2'
+  html_document:
+    highlight: default
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+    toc_depth: 2
+---
+
+
+
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+
+if (!require("dplyr")) {
+   install.packages("dplyr")
+   library(dplyr)
+}
+
+
+if (!require("ggplot2")) {
+   install.packages("ggplot2")
+   library(ggplot2)
+}
+
+
+
+
+```
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+PAXI <- read.csv("pax_data_371_agreements_11-04-21.csv")
+
+
+colnames(PAXI)[1] <- "Con"
+
+PAX <- select(PAXI,Con,Reg,Dat,GeWom,GeLgbtiPos,GeLgbtiNeg)
+
+PAX <- cbind(PAX,Year=c(as.integer(0)))
+
+PAX$Year <- as.numeric(format(as.Date(PAX$Dat), "%Y"))
+
+PAX <- select(PAX,-Dat)
+
+View(PAX)
+
+summary(PAX,"table")
+
+write.csv(PAX, file = "pax_data_371_agreements_11-04-21_updated.csv")
+
+
+
+ggplot(PAX, aes(y=GeWom, x=Reg)) + 
+    geom_bar(stat="identity") + coord_flip() + xlab("Women, girls and gender references") + ylab("Regions")
+
+
+PAX4 <- read.csv("pax_data_113_agreements_12-04-21.csv")
+
+
+colnames(PAX4)[1] <- "Con"
+
+PAX5 <- select(PAX4,Con,Reg,Dat,WggVio,WggVioSex,WggVioGen,WggIndNom,WggRefDisp,WggPreg)
+
+View(PAX5)
+
+PAX5 <- cbind(PAX5,Year=c(as.integer(0)))
+
+PAX5$Year <- as.numeric(format(as.Date(PAX5$Dat), "%Y"))
+
+PAX5 <- select(PAX5,-Dat)
+
+View(PAX5)
+
+
+summary(PAX5,"table")
+
+
+write.csv(PAX5, file = "pax_data_113_agreements_12-04-21_updated.csv")
+
+
+
+ggplot(PAX5, aes(y=WggVio, x=Reg)) + 
+    geom_bar(stat="identity") + coord_flip() + xlab("Violence against women") + ylab("Regions")
+
+
+```
+
+
